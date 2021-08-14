@@ -16,15 +16,30 @@ main {
   padding: 20px;
 }
 
-footer {
-  /* footer styles */
-}
-
+/* Section for selecting rovers button to show more info */
 .buttons-wrapper {
   display: flex;
   flex-wrap: nowrap;
   justify-content: space-around;
 }
+
+.buttons-wrapper .rover-button {
+  font-size: 20px;
+  width: 200px;
+  padding: 5px 0;
+  color: white;
+  background-color: #0b3d91;
+}
+
+.buttons-wrapper .rover-button:hover {
+  background-color: #fc3d21;
+}
+
+
+footer {
+  /* footer styles */
+}
+
 
 /* -------------------  TABLET  --------------------- */
 @media (min-width: 768px) {

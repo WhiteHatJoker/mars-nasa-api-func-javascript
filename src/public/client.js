@@ -51,7 +51,7 @@ const App = (state) => {
 
 const buildRoverButtons = (rovers) => {
     const buttons = rovers.map(rover => {
-        return `<button>${rover}</button>`
+        return `<button class="rover-button" onclick="showRoverInfo(${rover.toLowerCase()})">${rover}</button>`
     })
     return buttons.join('');
 }
