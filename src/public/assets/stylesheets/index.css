@@ -20,6 +20,12 @@ footer {
   /* footer styles */
 }
 
+.buttons-wrapper {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+}
+
 /* -------------------  TABLET  --------------------- */
 @media (min-width: 768px) {
   /* use mobile */
