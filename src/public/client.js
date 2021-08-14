@@ -1,11 +1,14 @@
-let store = {
-    user: { name: "Student" },
+let store = Immutable.Map({
+    user: Immutable.Map({
+        name: "Francisco"
+    }),
     apod: '',
-    rovers: ['Curiosity', 'Opportunity', 'Spirit'],
-}
+    rovers: Immutable.List(['Spirit', 'Opportunity', 'Curiosity']),
+})
 
-const updateStore = (store, newState) => {
-    store = Object.assign(store, newState)
+
+const updateStore = (state, newState) => {
+    store = state.merge(Immutable.Map(newState));
     render(root, store)
 }
 
@@ -23,7 +26,6 @@ window.addEventListener('load', () => {
 
 // create content
 const App = (state) => {
-    let { rovers, apod } = state
 
     return `
         <header></header>
@@ -31,7 +33,7 @@ const App = (state) => {
             <section>
                 <h2>Choose one of the rovers below to see mission details</h2>
                 <div class="buttons-wrapper">
-                    ${buildRoverButtons(rovers)}
+                    ${buildRoverButtons(store.get("rovers"))}
                 </div>
                 <p>
                     One of the most popular websites at NASA is the Astronomy Picture of the Day. In fact, this website is one of
@@ -41,7 +43,7 @@ const App = (state) => {
                     explanation are returned. These keywords could be used as auto-generated hashtags for twitter or instagram feeds;
                     but generally help with discoverability of relevant imagery.
                 </p>
-                ${ImageOfTheDay(apod)}
+                ${ImageOfTheDay(store.get("apod"))}
             </section>
         </main>
         <footer></footer>
@@ -54,6 +56,11 @@ const buildRoverButtons = (rovers) => {
         return `<button class="rover-button" onclick="showRoverInfo(${rover.toLowerCase()})">${rover}</button>`
     })
     return buttons.join('');
+}
+
+const showRoverInfo = (rover) => {
+    // merge state add immutable js updateStore here
+    // api request
 }
 
 // ------------------------------------------------------  COMPONENTS
