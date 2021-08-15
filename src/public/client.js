@@ -2,7 +2,8 @@ let store = Immutable.Map({
     user: Immutable.Map({
         name: "Francisco"
     }),
-    apod: '',
+    roverInfo: '',
+    roverPhotos: '',
     rovers: Immutable.List(['Spirit', 'Opportunity', 'Curiosity']),
 })
 
@@ -43,7 +44,7 @@ const App = (state) => {
                     explanation are returned. These keywords could be used as auto-generated hashtags for twitter or instagram feeds;
                     but generally help with discoverability of relevant imagery.
                 </p>
-                ${ImageOfTheDay(store.get("apod"))}
+                // add a function here that check if value for current rover and data is set. If  yees then build rover info.Once we get info, updateStore so before this
             </section>
         </main>
         <footer></footer>
@@ -52,69 +53,60 @@ const App = (state) => {
 
 
 const buildRoverButtons = (rovers) => {
-    const buttons = rovers.map(rover => {
-        return `<button class="rover-button" onclick="showRoverInfo(${rover.toLowerCase()})">${rover}</button>`
-    })
-    return buttons.join('');
+    // use reduce here
+    // const buttons = rovers.map(rover => {
+    //     return `<button class="rover-button" onclick="getRoverInfo('${rover.toLowerCase()}')">${rover}</button>`
+    // })
+    // return buttons.join('');
+    const buttonsHtml = rovers.reduce(reducer, '')
+    return buttonsHtml
 }
 
-const showRoverInfo = (rover) => {
-    // merge state add immutable js updateStore here
-    // api request
+const reducer = (accumulator, currentValue) => accumulator + `<button class="rover-button" onclick="getRoverInfo('${currentValue.toLowerCase()}')">${currentValue}</button>`
+
+const getRoverInfo = (rover) => {
+    fetch(`http://localhost:3000/rover-info?name=${rover}`)
+    .then(res => res.json())
+    .then(roverInfo => updateStore(store, { roverInfo }))
 }
 
-// ------------------------------------------------------  COMPONENTS
+// // Example of a pure function that renders infomation requested from the backend
+// const ImageOfTheDay = (apod) => {
 
-// Pure function that renders conditional information -- THIS IS JUST AN EXAMPLE, you can delete it.
-// const Greeting = (name) => {
-//     if (name) {
-//         return `
-//             <h1>Welcome, ${name}!</h1>
-//         `
+//     // If image does not already exist, or it is not from today -- request it again
+//     const today = new Date()
+//     const photodate = new Date(apod.date)
+//     console.log(photodate.getDate(), today.getDate());
+
+//     console.log(photodate.getDate() === today.getDate());
+//     if (!apod || apod.date === today.getDate() ) {
+//         getImageOfTheDay(store)
 //     }
 
-//     return `
-//         <h1>Hello!</h1>
-//     `
+//     // check if the photo of the day is actually type video!
+//     if (apod.media_type === "video") {
+//         return (`
+//             <p>See today's featured video <a href="${apod.url}">here</a></p>
+//             <p>${apod.title}</p>
+//             <p>${apod.explanation}</p>
+//         `)
+//     } else {
+//         return (`
+//             <img src="${apod.image.url}" height="350px" width="100%" />
+//             <p>${apod.image.explanation}</p>
+//         `)
+//     }
 // }
 
-// Example of a pure function that renders infomation requested from the backend
-const ImageOfTheDay = (apod) => {
+// // ------------------------------------------------------  API CALLS
 
-    // If image does not already exist, or it is not from today -- request it again
-    const today = new Date()
-    const photodate = new Date(apod.date)
-    console.log(photodate.getDate(), today.getDate());
+// // Example API call
+// const getImageOfTheDay = (state) => {
+//     let { apod } = state
 
-    console.log(photodate.getDate() === today.getDate());
-    if (!apod || apod.date === today.getDate() ) {
-        getImageOfTheDay(store)
-    }
+//     fetch(`http://localhost:3000/apod`)
+//         .then(res => res.json())
+//         .then(apod => updateStore(store, { apod }))
 
-    // check if the photo of the day is actually type video!
-    if (apod.media_type === "video") {
-        return (`
-            <p>See today's featured video <a href="${apod.url}">here</a></p>
-            <p>${apod.title}</p>
-            <p>${apod.explanation}</p>
-        `)
-    } else {
-        return (`
-            <img src="${apod.image.url}" height="350px" width="100%" />
-            <p>${apod.image.explanation}</p>
-        `)
-    }
-}
-
-// ------------------------------------------------------  API CALLS
-
-// Example API call
-const getImageOfTheDay = (state) => {
-    let { apod } = state
-
-    fetch(`http://localhost:3000/apod`)
-        .then(res => res.json())
-        .then(apod => updateStore(store, { apod }))
-
-    return data
-}
+//     return data
+// }

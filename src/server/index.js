@@ -13,13 +13,23 @@ app.use(bodyParser.json())
 app.use('/', express.static(path.join(__dirname, '../public')))
 
 // your API calls
-
+const baseAPIURL = 'https://api.nasa.gov/mars-photos/api/v1/';
 // example API call
-app.get('/apod', async (req, res) => {
+app.get('/rover-info', async (req, res) => {
     try {
-        let image = await fetch(`https://api.nasa.gov/planetary/apod?api_key=${process.env.API_KEY}`)
+        let roverInfo= await fetch(`${baseAPIURL}manifests/${req.query.name}?api_key=${process.env.API_KEY}`)
             .then(res => res.json())
-        res.send({ image })
+        res.send({ roverInfo })
+    } catch (err) {
+        console.log('error:', err);
+    }
+})
+
+app.get('/rover-photos', async (req, res) => {
+    try {
+        let roverPhotos = await fetch(`${baseAPIURL}rovers/${req.query.name}?api_key=${process.env.API_KEY}`)
+            .then(res => res.json())
+        res.send({ roverPhotos })
     } catch (err) {
         console.log('error:', err);
     }
