@@ -44,30 +44,55 @@ const App = (state) => {
                     explanation are returned. These keywords could be used as auto-generated hashtags for twitter or instagram feeds;
                     but generally help with discoverability of relevant imagery.
                 </p>
-                // add a function here that check if value for current rover and data is set. If  yees then build rover info.Once we get info, updateStore so before this
-            </section>
+                    ${showRoverInfo()}
+                    // !!!!!!!!!!!!!!!!!!!!!Pass max date to rover images for recent images
+                    ${showRoverImages()}          
+                </section>
         </main>
         <footer></footer>
     `
 }
 
+// Function to dynamically build rover info request buttons
+const reducer = (accumulator, currentValue) => accumulator + `<button class="rover-button" onclick="getRoverInfo('${currentValue.toLowerCase()}')">${currentValue}</button>`
 
 const buildRoverButtons = (rovers) => {
-    // use reduce here
-    // const buttons = rovers.map(rover => {
-    //     return `<button class="rover-button" onclick="getRoverInfo('${rover.toLowerCase()}')">${rover}</button>`
-    // })
-    // return buttons.join('');
     const buttonsHtml = rovers.reduce(reducer, '')
     return buttonsHtml
 }
 
-const reducer = (accumulator, currentValue) => accumulator + `<button class="rover-button" onclick="getRoverInfo('${currentValue.toLowerCase()}')">${currentValue}</button>`
-
+// Function for an API call to get rover manifests
 const getRoverInfo = (rover) => {
     fetch(`http://localhost:3000/rover-info?name=${rover}`)
     .then(res => res.json())
     .then(roverInfo => updateStore(store, { roverInfo }))
+}
+
+// Function to get and draw the rover info on the page if roverInfo is set
+const showRoverInfo = () => {
+    const rover = store.get("roverInfo")
+    if (rover) {
+        console.log(rover)
+        return rover.roverInfo.photo_manifest.max_date;
+    } 
+    return '';
+}
+
+
+// Function for an API call to get rover photos
+const getRoverImages = (rover) => {
+    fetch(`http://localhost:3000/rover-photos?name=${rover}`)
+    .then(res => res.json())
+    .then(roverPhotos => updateStore(store, { roverPhotos }))
+}
+
+// Function to get and draw the rover photos gallery on the page if roverPhotos is set
+const showRoverImages = () => {
+    if (store.get("roverPhotos")) {
+        return 'blabla';
+    } else {
+        return 'yummy';
+    }
 }
 
 // // Example of a pure function that renders infomation requested from the backend
