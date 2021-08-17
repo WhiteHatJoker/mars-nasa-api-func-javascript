@@ -69,17 +69,14 @@ const getRoverInfo = (rover) => {
         updateStore(store, { roverInfo })
         getRoverImages(rover, roverInfo)
     })
-
-    // getRoverImages(rover)
 }
 
 // Function to get and draw the rover info on the page if roverInfo is set
 const showRoverInfo = () => {
     const roverInfo = store.get("roverInfo")
     if (roverInfo) {
-        // console.log(roverInfo)
-        // refactor naming here doesn't look good
-        return roverInfo.manifest.photo_manifest.max_date;
+        // return data for draw
+        return roverInfo.manifest.photo_manifest.max_date
     } 
     return '';
 }
@@ -87,10 +84,7 @@ const showRoverInfo = () => {
 
 // Function for an API call to get rover photos
 const getRoverImages = (rover, roverInfo) => {
-    console.log(roverInfo)
-
     const lastImageDate = roverInfo.manifest.photo_manifest.max_date
-    console.log(lastImageDate)
     fetch(`http://localhost:3000/rover-photos?name=${rover}&date=${lastImageDate}`)
     .then(res => res.json())
     .then(roverPhotos => updateStore(store, { roverPhotos }))
@@ -98,11 +92,12 @@ const getRoverImages = (rover, roverInfo) => {
 
 // Function to get and draw the rover photos gallery on the page if roverPhotos is set
 const showRoverImages = () => {
-    if (store.get("roverPhotos")) {
-        return 'blabla';
-    } else {
-        return 'yummy';
+    const roverPhotos = store.get("roverPhotos")
+    if (roverPhotos) {
+        // return data for draw
+        return 'photos here'
     }
+    return '';
 }
 
 // // Example of a pure function that renders infomation requested from the backend
