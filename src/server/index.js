@@ -27,7 +27,7 @@ app.get('/rover-info', async (req, res) => {
 
 app.get('/rover-photos', async (req, res) => {
     try {
-        let pics = await fetch(`${baseAPIURL}rovers/${req.query.name}/photos?earth_date=${req.query.lastImageDate}&page=1&api_key=${process.env.API_KEY}`)
+        let pics = await fetch(`${baseAPIURL}rovers/${req.query.name}/photos?earth_date=${req.query.date}&api_key=${process.env.API_KEY}&page=1`)
             .then(res => res.json())
         res.send({ pics })
     } catch (err) {

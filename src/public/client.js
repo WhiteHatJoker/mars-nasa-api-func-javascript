@@ -87,7 +87,10 @@ const showRoverInfo = () => {
 
 // Function for an API call to get rover photos
 const getRoverImages = (rover, roverInfo) => {
+    console.log(roverInfo)
+
     const lastImageDate = roverInfo.manifest.photo_manifest.max_date
+    console.log(lastImageDate)
     fetch(`http://localhost:3000/rover-photos?name=${rover}&date=${lastImageDate}`)
     .then(res => res.json())
     .then(roverPhotos => updateStore(store, { roverPhotos }))
