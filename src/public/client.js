@@ -65,23 +65,30 @@ const buildRoverButtons = (rovers) => {
 const getRoverInfo = (rover) => {
     fetch(`http://localhost:3000/rover-info?name=${rover}`)
     .then(res => res.json())
-    .then(roverInfo => updateStore(store, { roverInfo }))
+    .then(roverInfo => {
+        updateStore(store, { roverInfo })
+        getRoverImages(rover, roverInfo)
+    })
+
+    // getRoverImages(rover)
 }
 
 // Function to get and draw the rover info on the page if roverInfo is set
 const showRoverInfo = () => {
-    const rover = store.get("roverInfo")
-    if (rover) {
-        console.log(rover)
-        return rover.roverInfo.photo_manifest.max_date;
+    const roverInfo = store.get("roverInfo")
+    if (roverInfo) {
+        // console.log(roverInfo)
+        // refactor naming here doesn't look good
+        return roverInfo.manifest.photo_manifest.max_date;
     } 
     return '';
 }
 
 
 // Function for an API call to get rover photos
-const getRoverImages = (rover) => {
-    fetch(`http://localhost:3000/rover-photos?name=${rover}`)
+const getRoverImages = (rover, roverInfo) => {
+    const lastImageDate = roverInfo.manifest.photo_manifest.max_date
+    fetch(`http://localhost:3000/rover-photos?name=${rover}&date=${lastImageDate}`)
     .then(res => res.json())
     .then(roverPhotos => updateStore(store, { roverPhotos }))
 }
