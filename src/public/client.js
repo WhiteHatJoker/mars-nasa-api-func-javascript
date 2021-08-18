@@ -32,10 +32,6 @@ const App = (state) => {
         <header></header>
         <main>
             <section>
-                <h2>Choose one of the rovers below to see mission details</h2>
-                <div class="buttons-wrapper">
-                    ${buildRoverButtons(store.get("rovers"))}
-                </div>
                 <p>
                     One of the most popular websites at NASA is the Astronomy Picture of the Day. In fact, this website is one of
                     the most popular websites across all federal agencies. It has the popular appeal of a Justin Bieber video.
@@ -44,9 +40,16 @@ const App = (state) => {
                     explanation are returned. These keywords could be used as auto-generated hashtags for twitter or instagram feeds;
                     but generally help with discoverability of relevant imagery.
                 </p>
+                <h2>Choose one of the rovers below to see mission details</h2>
+                <div class="buttons-wrapper">
+                    ${buildRoverButtons(store.get("rovers"))}
+                </div>
+
                     ${showRoverInfo()}
                     // !!!!!!!!!!!!!!!!!!!!!Pass max date to rover images for recent images
-                    ${showRoverImages()}          
+                    <section id="gallery">
+                    ${showRoverImages()}  
+                    </section>        
                 </section>
         </main>
         <footer></footer>
@@ -82,10 +85,18 @@ const showRoverInfo = () => {
 }
 
 
+const findDateWithTonPics = (roverInfo) => {
+    const lotsOfPicsMeta = roverInfo.manifest.photo_manifest.photos.filter(photoInfo => photoInfo.total_photos > 20)
+    const latestEarthDay = lotsOfPicsMeta[lotsOfPicsMeta.length-1].earth_date
+    return latestEarthDay
+
+}
+
 // Function for an API call to get rover photos
-const getRoverImages = (rover, roverInfo) => {
-    const lastImageDate = roverInfo.manifest.photo_manifest.max_date
-    fetch(`http://localhost:3000/rover-photos?name=${rover}&date=${lastImageDate}`)
+const getRoverImages = (roverName, roverInfo) => {
+    // We need to filter the las
+    const lastImageDate = findDateWithTonPics(roverInfo)  
+    fetch(`http://localhost:3000/rover-photos?name=${roverName}&date=${lastImageDate}`)
     .then(res => res.json())
     .then(roverPhotos => updateStore(store, { roverPhotos }))
 }
@@ -95,48 +106,8 @@ const showRoverImages = () => {
     const roverPhotos = store.get("roverPhotos")
     if (roverPhotos) {
         // return data for draw
-        return 'photos here'
+        const imgsHtml = roverPhotos.pics.photos.map(photoObj => `<img class="galleryPics" src="${photoObj.img_src}" />`)
+        return imgsHtml.join('')
     }
     return '';
 }
-
-// // Example of a pure function that renders infomation requested from the backend
-// const ImageOfTheDay = (apod) => {
-
-//     // If image does not already exist, or it is not from today -- request it again
-//     const today = new Date()
-//     const photodate = new Date(apod.date)
-//     console.log(photodate.getDate(), today.getDate());
-
-//     console.log(photodate.getDate() === today.getDate());
-//     if (!apod || apod.date === today.getDate() ) {
-//         getImageOfTheDay(store)
-//     }
-
-//     // check if the photo of the day is actually type video!
-//     if (apod.media_type === "video") {
-//         return (`
-//             <p>See today's featured video <a href="${apod.url}">here</a></p>
-//             <p>${apod.title}</p>
-//             <p>${apod.explanation}</p>
-//         `)
-//     } else {
-//         return (`
-//             <img src="${apod.image.url}" height="350px" width="100%" />
-//             <p>${apod.image.explanation}</p>
-//         `)
-//     }
-// }
-
-// // ------------------------------------------------------  API CALLS
-
-// // Example API call
-// const getImageOfTheDay = (state) => {
-//     let { apod } = state
-
-//     fetch(`http://localhost:3000/apod`)
-//         .then(res => res.json())
-//         .then(apod => updateStore(store, { apod }))
-
-//     return data
-// }
