@@ -106,7 +106,7 @@ const showRoverImages = () => {
     const roverPhotos = store.get("roverPhotos")
     if (roverPhotos) {
         // return data for draw
-        const imgsHtml = roverPhotos.pics.photos.map(photoObj => `<img class="galleryPics" src="${photoObj.img_src}" />`)
+        const imgsHtml = roverPhotos.pics.photos.map(photoObj => `<div class="galpic"><img src="${photoObj.img_src}" /></div>`)
         return imgsHtml.join('')
     }
     return '';
