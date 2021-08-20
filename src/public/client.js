@@ -71,7 +71,7 @@ const buildRoverButtons = (rovers) => {
     return buttonsHtml
 }
 
-// Function for an API call to get rover manifests
+// Function for an API call to get rover information
 const getRoverInfo = (rover) => {
     fetch(`http://localhost:3000/rover-info?name=${rover}`)
     .then(res => res.json())
@@ -85,8 +85,6 @@ const getRoverInfo = (rover) => {
 const showRoverInfo = () => {
     const roverInfo = store.get("roverInfo")
     if (roverInfo) {
-        // return data for draw
-        console.log(roverInfo)
         const roverMeta = roverInfo.manifest.photo_manifest
         const roverMetaHtml = `<h1>${roverMeta.name} Rover Info</h1>
                                 <table class="rover-meta">
@@ -101,7 +99,7 @@ const showRoverInfo = () => {
     return '';
 }
 
-
+// Function to find latest date when more than 20 photos were taken
 const findDateWithTonPics = (roverInfo) => {
     const lotsOfPicsMeta = roverInfo.manifest.photo_manifest.photos.filter(photoInfo => photoInfo.total_photos > 20)
     const latestEarthDay = lotsOfPicsMeta[lotsOfPicsMeta.length-1].earth_date
@@ -121,7 +119,6 @@ const getRoverImages = (roverName, roverInfo) => {
 const showRoverImages = () => {
     const roverPhotos = store.get("roverPhotos")
     if (roverPhotos) {
-        // return data for draw
         const imgsHtml = roverPhotos.pics.photos.map(photoObj => `<div class="galpic"><img src="${photoObj.img_src}" /></div>`)
         return imgsHtml.join('')
     }
@@ -130,13 +127,14 @@ const showRoverImages = () => {
 
 const ImageOfTheDay = (apod) => {
     // If image does not already exist, or it is not from today -- request it again
-    const today = new Date()
-    const photodate = new Date(apod.date)
-    console.log(photodate.getDate(), today.getDate());
-
-    console.log(photodate.getDate() === today.getDate());
-    if (!apod || apod.date === today.getDate() ) {
+    if (!apod) {
         getImageOfTheDay(store)
+    } else {
+        const today = new Date()
+        const photodate = new Date(apod.date)
+        if (!apod || apod.date === today.getDate() ) {
+            getImageOfTheDay(store)
+        }
     }
 
     // check if the photo of the day is actually type video!
@@ -156,10 +154,7 @@ const ImageOfTheDay = (apod) => {
 
 const getImageOfTheDay = (state) => {
     let { apod } = state
-
     fetch(`http://localhost:3000/apod`)
         .then(res => res.json())
         .then(apod => updateStore(store, { apod }))
-
-        return data
 }

@@ -70,11 +70,13 @@ table.rover-meta {
   margin: 20px auto;
   border-collapse:collapse;
   border:1px solid white;
+  width: 100%;
 }
 
 .rover-meta td {
   border:1px solid white;
   padding: 10px 15px;
+  width:50%;
 }
 
 /* Gallery Section */
@@ -126,6 +128,9 @@ footer {
   .galpic {
     flex: 33.3%;
     max-width: 33.3%;
+  }
+  table.rover-meta {
+    width: 1000px;
   }
 }
 
