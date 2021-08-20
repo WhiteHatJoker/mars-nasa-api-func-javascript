@@ -17,7 +17,7 @@ const baseAPIURL = 'https://api.nasa.gov/mars-photos/api/v1/';
 // example API call
 app.get('/rover-info', async (req, res) => {
     try {
-        let manifest= await fetch(`${baseAPIURL}manifests/${req.query.name}?api_key=${process.env.API_KEY}`)
+        const manifest= await fetch(`${baseAPIURL}manifests/${req.query.name}?api_key=${process.env.API_KEY}`)
             .then(res => res.json())
         res.send({ manifest })
     } catch (err) {
@@ -27,7 +27,7 @@ app.get('/rover-info', async (req, res) => {
 
 app.get('/rover-photos', async (req, res) => {
     try {
-        let pics = await fetch(`${baseAPIURL}rovers/${req.query.name}/photos?earth_date=${req.query.date}&api_key=${process.env.API_KEY}&page=1`)
+        const pics = await fetch(`${baseAPIURL}rovers/${req.query.name}/photos?earth_date=${req.query.date}&api_key=${process.env.API_KEY}&page=1`)
             .then(res => res.json())
         res.send({ pics })
     } catch (err) {
@@ -37,7 +37,7 @@ app.get('/rover-photos', async (req, res) => {
 
 app.get('/apod', async (req, res) => {
     try {
-        let image = await fetch(`https://api.nasa.gov/planetary/apod?api_key=${process.env.API_KEY}`)
+        const image = await fetch(`https://api.nasa.gov/planetary/apod?api_key=${process.env.API_KEY}`)
             .then(res => res.json())
         res.send({ image })
     } catch (err) {

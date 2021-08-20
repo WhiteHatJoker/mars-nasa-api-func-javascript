@@ -102,7 +102,6 @@ const buildRoverInfoTable = (rover) => {
         <tr><td>Latest Photo Date</td><td>${rover.max_date}</td></tr>
     </table>` 
     return roverMetaHtml
-
 }
 
 // Function to find latest date when more than 20 photos were taken
@@ -164,7 +163,7 @@ const ImageOfTheDay = (apod) => {
 }
 
 const getImageOfTheDay = (state) => {
-    let { apod } = state
+    const { apod } = state
     fetch(`http://localhost:3000/apod`)
         .then(res => res.json())
         .then(apod => updateStore(store, { apod }))
