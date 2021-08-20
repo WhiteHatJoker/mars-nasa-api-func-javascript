@@ -1,7 +1,5 @@
 let store = Immutable.Map({
-    user: Immutable.Map({
-        name: "Francisco"
-    }),
+    apod: '',
     roverInfo: '',
     roverPhotos: '',
     rovers: Immutable.List(['Spirit', 'Opportunity', 'Curiosity']),
@@ -46,7 +44,18 @@ const App = (state) => {
                 </section>
                 <section id="gallery">
                     ${showRoverImages()}  
-                </section>        
+                </section>
+                <section>
+                    <p>
+                        One of the most popular websites at NASA is the Astronomy Picture of the Day. In fact, this website is one of
+                        the most popular websites across all federal agencies. It has the popular appeal of a Justin Bieber video.
+                        This endpoint structures the APOD imagery and associated metadata so that it can be repurposed for other
+                        applications. In addition, if the concept_tags parameter is set to True, then keywords derived from the image
+                        explanation are returned. These keywords could be used as auto-generated hashtags for twitter or instagram feeds;
+                        but generally help with discoverability of relevant imagery.
+                    </p>
+                    ${ImageOfTheDay(store.get("apod"))}
+                </section>       
             </section>
         </main>
         <footer></footer>
@@ -115,4 +124,40 @@ const showRoverImages = () => {
         return imgsHtml.join('')
     }
     return '';
+}
+
+const ImageOfTheDay = (apod) => {
+    // If image does not already exist, or it is not from today -- request it again
+    const today = new Date()
+    const photodate = new Date(apod.date)
+    console.log(photodate.getDate(), today.getDate());
+
+    console.log(photodate.getDate() === today.getDate());
+    if (!apod || apod.date === today.getDate() ) {
+        getImageOfTheDay(store)
+    }
+
+    // check if the photo of the day is actually type video!
+    if (apod.media_type === "video") {
+        return (`
+            <p>See today's featured video <a href="${apod.url}">here</a></p>
+            <p>${apod.title}</p>
+            <p>${apod.explanation}</p>
+        `)
+    } else {
+        return (`
+            <img src="${apod.image.url}" height="350px" width="100%" />
+            <p>${apod.image.explanation}</p>
+        `)
+    }
+}
+
+const getImageOfTheDay = (state) => {
+    let { apod } = state
+
+    fetch(`http://localhost:3000/apod`)
+        .then(res => res.json())
+        .then(apod => updateStore(store, { apod }))
+
+    return data
 }
