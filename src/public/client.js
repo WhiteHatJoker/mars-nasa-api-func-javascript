@@ -29,28 +29,25 @@ window.addEventListener('load', () => {
 const App = (state) => {
 
     return `
-        <header></header>
+        <header>
+            <img width="400px" src="./assets/img/mars-logo.png" />                    
+            <h1>Mars Rover Dashboard</h1>
+        </header>
         <main>
             <section>
-                <p>
-                    One of the most popular websites at NASA is the Astronomy Picture of the Day. In fact, this website is one of
-                    the most popular websites across all federal agencies. It has the popular appeal of a Justin Bieber video.
-                    This endpoint structures the APOD imagery and associated metadata so that it can be repurposed for other
-                    applications. In addition, if the concept_tags parameter is set to True, then keywords derived from the image
-                    explanation are returned. These keywords could be used as auto-generated hashtags for twitter or instagram feeds;
-                    but generally help with discoverability of relevant imagery.
-                </p>
-                <h2>Choose one of the rovers below to see mission details</h2>
-                <div class="buttons-wrapper">
-                    ${buildRoverButtons(store.get("rovers"))}
-                </div>
-
-                    ${showRoverInfo()}
-                    // !!!!!!!!!!!!!!!!!!!!!Pass max date to rover images for recent images
-                    <section id="gallery">
-                    ${showRoverImages()}  
-                    </section>        
+                <section id ="controller">
+                    <h2>Choose one of the rovers below to see the mission details and recent photos</h2>
+                    <div class="buttons-wrapper">
+                        ${buildRoverButtons(store.get("rovers"))}
+                    </div>
                 </section>
+                <section id="roverInfo">
+                    ${showRoverInfo()}
+                </section>
+                <section id="gallery">
+                    ${showRoverImages()}  
+                </section>        
+            </section>
         </main>
         <footer></footer>
     `
@@ -79,7 +76,15 @@ const showRoverInfo = () => {
     const roverInfo = store.get("roverInfo")
     if (roverInfo) {
         // return data for draw
-        return roverInfo.manifest.photo_manifest.max_date
+        console.log(roverInfo)
+        const roverMeta = roverInfo.manifest.photo_manifest
+        const roverMetaHtml = `<h1>${roverMeta.name}</h1>
+                                <div>Status: ${roverMeta.status}</div>
+                                <div>Launch Date: ${roverMeta.launch_date}</div>
+                                <div>Landing Date: ${roverMeta.landing_date}</div>
+                                <div>Total Photos Taken: ${roverMeta.total_photos}</div>
+                                <div>Latest Photo Date: ${roverMeta.max_date}</div>` 
+        return roverMetaHtml
     } 
     return '';
 }
