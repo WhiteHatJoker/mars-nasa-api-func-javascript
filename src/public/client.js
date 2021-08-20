@@ -39,13 +39,14 @@ const App = (state) => {
                         ${buildRoverButtons(store.get("rovers"))}
                     </div>
                 </section>
-                <section id="roverInfo">
+                <section id="rover-info">
                     ${showRoverInfo()}
                 </section>
                 <section id="gallery">
                     ${showRoverImages()}  
                 </section>
-                <section>
+                <section id="apod">
+                    <h1>Astronomy Picture of the Day</h1>
                     <p>
                         One of the most popular websites at NASA is the Astronomy Picture of the Day. In fact, this website is one of
                         the most popular websites across all federal agencies. It has the popular appeal of a Justin Bieber video.
@@ -87,12 +88,14 @@ const showRoverInfo = () => {
         // return data for draw
         console.log(roverInfo)
         const roverMeta = roverInfo.manifest.photo_manifest
-        const roverMetaHtml = `<h1>${roverMeta.name}</h1>
-                                <div>Status: ${roverMeta.status}</div>
-                                <div>Launch Date: ${roverMeta.launch_date}</div>
-                                <div>Landing Date: ${roverMeta.landing_date}</div>
-                                <div>Total Photos Taken: ${roverMeta.total_photos}</div>
-                                <div>Latest Photo Date: ${roverMeta.max_date}</div>` 
+        const roverMetaHtml = `<h1>${roverMeta.name} Rover Info</h1>
+                                <table class="rover-meta">
+                                    <tr><td>Mission Status</td><td style="text-transform:capitalize;">${roverMeta.status}</td></tr>
+                                    <tr><td>Launch Date</td><td>${roverMeta.launch_date}</td></tr>
+                                    <tr><td>Landing Date</td><td>${roverMeta.landing_date}</td></tr>
+                                    <tr><td>Total Photos Taken</td><td>${roverMeta.total_photos}</td></tr>
+                                    <tr><td>Latest Photo Date</td><td>${roverMeta.max_date}</td></tr>
+                                </table>` 
         return roverMetaHtml
     } 
     return '';
@@ -108,7 +111,6 @@ const findDateWithTonPics = (roverInfo) => {
 
 // Function for an API call to get rover photos
 const getRoverImages = (roverName, roverInfo) => {
-    // We need to filter the las
     const lastImageDate = findDateWithTonPics(roverInfo)  
     fetch(`http://localhost:3000/rover-photos?name=${roverName}&date=${lastImageDate}`)
     .then(res => res.json())
@@ -146,7 +148,7 @@ const ImageOfTheDay = (apod) => {
         `)
     } else {
         return (`
-            <img src="${apod.image.url}" height="350px" width="100%" />
+            <img class="apod-img" src="${apod.image.url}" height="350px" width="100%" />
             <p>${apod.image.explanation}</p>
         `)
     }
@@ -159,5 +161,5 @@ const getImageOfTheDay = (state) => {
         .then(res => res.json())
         .then(apod => updateStore(store, { apod }))
 
-    return data
+        return data
 }

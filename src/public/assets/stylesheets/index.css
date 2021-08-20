@@ -7,6 +7,22 @@ body {
   min-height: 100vh;
   background: #000 url("./../img/starfield-back.jpg");
   color:white;
+  text-align: center;
+}
+
+h1 {
+  font-size: 35px;
+  font-weight: bold;
+}
+
+h2 {
+  font-size:24px;
+  margin-bottom: 30px;
+}
+
+p {
+  font-size: 18px;
+  padding: 20px 0;
 }
 
 /* Header Styles */
@@ -14,29 +30,22 @@ header {
   text-align: center;
 }
 
-header h1 {
-  font-size:35px;
-  font-weight: bold;
-
-}
-
-
 main {
   flex: 1;
-  padding: 20px;
+  padding: 0 20px;
 }
 
 /* Controller section */
-#controller h2 {
-  text-align: center;
-  font-size: 24px;
-  margin: 40px 0;
+#controller {
+  padding: 20px 0 33px 0;
+  border-bottom: 1px solid white;
 }
-/* Section for selecting rovers button to show more info */
+
 .buttons-wrapper {
   display: flex;
   flex-wrap: nowrap;
   justify-content: space-around;
+  margin:0 auto;
 }
 
 .buttons-wrapper .rover-button {
@@ -51,6 +60,23 @@ main {
   background-color: #0b3d91;
 }
 
+/* Rover Info Section */
+#rover-info {
+  padding-top:30px;
+}
+
+table.rover-meta {
+  background-color:rgba(11,61,145,0.7);
+  margin: 20px auto;
+  border-collapse:collapse;
+  border:1px solid white;
+}
+
+.rover-meta td {
+  border:1px solid white;
+  padding: 10px 15px;
+}
+
 /* Gallery Section */
 #gallery {
   display: flex;
@@ -59,8 +85,8 @@ main {
 }
 
 .galpic {
-  flex: 25%;
-  max-width: 25%;
+  flex: 100%;
+  max-width: 100%;
   padding: 0 4px;
 }
 
@@ -68,6 +94,14 @@ main {
   margin-top: 8px;
   vertical-align: middle;
   width: 100%;
+  border: 1px solid white;
+  border-radius: 1px;
+}
+
+/*  Apod section */
+.apod-img {
+  border: 1px solid white;
+  border-radius: 10px;
 }
 
 footer {
@@ -77,17 +111,29 @@ footer {
 
 /* -------------------  TABLET  --------------------- */
 @media (min-width: 768px) {
-  /* use mobile */
+  .galpic {
+    flex: 50%;
+    max-width: 50%;
+  }
 }
 
 /* -------------------  DESKTOP  -------------------- */
 
 @media (min-width: 1224px) {
-  /* use mobile */
+  .buttons-wrapper {
+    width: 1150px;
+  }
+  .galpic {
+    flex: 33.3%;
+    max-width: 33.3%;
+  }
 }
 
 /* -------------------  LARGE SCREENS  -------------- */
 
 @media (min-width: 1824px) {
-  /* use mobile */
+  .galpic {
+    flex: 25%;
+    max-width: 25%;
+  }
 }
