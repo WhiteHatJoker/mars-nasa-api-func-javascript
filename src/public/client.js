@@ -40,10 +40,10 @@ const App = (state) => {
                     </div>
                 </section>
                 <section id="rover-info">
-                    ${showRoverInfo()}
+                    ${showRoverInfo(buildRoverInfoTable)}
                 </section>
                 <section id="gallery">
-                    ${showRoverImages()}  
+                    ${showRoverImages(buildRoverGalleryHtml)}  
                 </section>
                 <section id="apod">
                     <h1>Astronomy Picture of the Day</h1>
@@ -64,7 +64,7 @@ const App = (state) => {
 }
 
 // Function to dynamically build rover info request buttons
-const reducer = (accumulator, currentValue) => accumulator + `<button class="rover-button" onclick="getRoverInfo('${currentValue.toLowerCase()}.')">${currentValue}</button>`
+const reducer = (accumulator, currentValue) => accumulator + `<button class="rover-button" onclick="getRoverInfo('${currentValue.toLowerCase()}')">${currentValue}</button>`
 
 const buildRoverButtons = (rovers) => {
     const buttonsHtml = rovers.reduce(reducer, '')
@@ -81,22 +81,28 @@ const getRoverInfo = (rover) => {
     })
 }
 
-// Function to get and draw the rover info on the page if roverInfo is set
-const showRoverInfo = () => {
+// High order function to get rover info and pass it to callback html building function
+const showRoverInfo = (buildRoverInfoHtml) => {
     const roverInfo = store.get("roverInfo")
     if (roverInfo) {
         const roverMeta = roverInfo.manifest.photo_manifest
-        const roverMetaHtml = `<h1>${roverMeta.name} Rover Info</h1>
-                                <table class="rover-meta">
-                                    <tr><td>Mission Status</td><td style="text-transform:capitalize;">${roverMeta.status}</td></tr>
-                                    <tr><td>Launch Date</td><td>${roverMeta.launch_date}</td></tr>
-                                    <tr><td>Landing Date</td><td>${roverMeta.landing_date}</td></tr>
-                                    <tr><td>Total Photos Taken</td><td>${roverMeta.total_photos}</td></tr>
-                                    <tr><td>Latest Photo Date</td><td>${roverMeta.max_date}</td></tr>
-                                </table>` 
-        return roverMetaHtml
+        return buildRoverInfoHtml(roverMeta)
     } 
     return '';
+}
+
+// Callback function for rover info html
+const buildRoverInfoTable = (rover) => {
+    const roverMetaHtml = `<h1>${rover.name} Rover Info</h1>
+    <table class="rover-meta">
+        <tr><td>Mission Status</td><td style="text-transform:capitalize;">${rover.status}</td></tr>
+        <tr><td>Launch Date</td><td>${rover.launch_date}</td></tr>
+        <tr><td>Landing Date</td><td>${rover.landing_date}</td></tr>
+        <tr><td>Total Photos Taken</td><td>${rover.total_photos}</td></tr>
+        <tr><td>Latest Photo Date</td><td>${rover.max_date}</td></tr>
+    </table>` 
+    return roverMetaHtml
+
 }
 
 // Function to find latest date when more than 20 photos were taken
@@ -115,14 +121,19 @@ const getRoverImages = (roverName, roverInfo) => {
     .then(roverPhotos => updateStore(store, { roverPhotos }))
 }
 
-// Function to get and draw the rover photos gallery on the page if roverPhotos is set
-const showRoverImages = () => {
+// High order function to get rover photos and pass it to callback function for building gallery html
+const showRoverImages = (buildRoverGallery) => {
     const roverPhotos = store.get("roverPhotos")
     if (roverPhotos) {
-        const imgsHtml = roverPhotos.pics.photos.map(photoObj => `<div class="galpic"><img src="${photoObj.img_src}" /></div>`)
-        return imgsHtml.join('')
+        return buildRoverGallery(roverPhotos)
     }
     return '';
+}
+
+// Callback function for rover photos html
+const buildRoverGalleryHtml = (roverPhotos) => {
+    const galleryHtml = roverPhotos.pics.photos.map(photoObj => `<div class="galpic"><img src="${photoObj.img_src}" /></div>`)
+    return galleryHtml.join('')
 }
 
 const ImageOfTheDay = (apod) => {
