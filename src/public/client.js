@@ -64,7 +64,7 @@ const App = (state) => {
 }
 
 // Function to dynamically build rover info request buttons
-const reducer = (accumulator, currentValue) => accumulator + `<button class="rover-button" onclick="getRoverInfo('${currentValue.toLowerCase()}')">${currentValue}</button>`
+const reducer = (accumulator, currentValue) => accumulator + `<button class="rover-button" onclick="getRoverInfo('${currentValue.toLowerCase()}.')">${currentValue}</button>`
 
 const buildRoverButtons = (rovers) => {
     const buttonsHtml = rovers.reduce(reducer, '')
